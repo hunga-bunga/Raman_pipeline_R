@@ -950,8 +950,7 @@ ML_raman_cnn2d_radar <- function(dataset, img_size = 64, train_prop = 0.7, epoch
 }
 
 # ==============================================================================
-#   PIPELINE COMPLETO: DESDE O CARREGAMENTO E FILTRAGEM ATÉ AOS TESTES GLOBAIS
-#   (SEM REDEFINIR A FUNÇÃO ML_RAMAN ORIGINAL - VERSÃO CORRIGIDA)
+#   PIPELINE COMPLETO
 # ==============================================================================
 
 if (!requireNamespace("hyperSpec", quietly = TRUE)) install.packages("hyperSpec")
@@ -977,14 +976,12 @@ df_chondro <- list(
 # indices_validos <- which(!is.na(df_bruto$y_train))
 # df_chondro <- list(data=df_bruto$data[indices_validos, , drop=FALSE], wavenumbers=df_bruto$wavenumbers, y_train=as.factor(df_bruto$y_train[indices_validos]))
 
-cat("==================================================================\n")
-cat("    DATASET CARREGADO E FILTRADO COM SUCESSO\n")
-cat("==================================================================\n")
+
 cat("Amostras limpas enviadas para o pipeline:", nrow(df_chondro$data), "\n\n")
 
 
 # ------------------------------------------------------------------------------
-# 2. FLUXO SEQUENCIAL DE PRÉ-PROCESSAMENTO (TUAS FUNÇÕES)
+# 2. FLUXO SEQUENCIAL DE PRÉ-PROCESSAMENTO 
 # ------------------------------------------------------------------------------
 cat("--- A EXECUTAR PRÉ-PROCESSAMENTO ---\n")
 
@@ -1016,7 +1013,7 @@ cat("Dimensões após Transformada de Fourier:", dim(df_fourier$data), "\n")
 
 
 # ------------------------------------------------------------------------------
-# 4. BLOCO DE VISUALIZAÇÃO GRÁFICA (OS TEUS GRÁFICOS)
+# 4. BLOCO DE VISUALIZAÇÃO GRÁFICA 
 # ------------------------------------------------------------------------------
 cat("\n--- A GERAR PROJEÇÕES GRÁFICAS ---\n")
 
@@ -1065,7 +1062,7 @@ cat("==================================================================\n")
 cat("   TESTE DE MODELOS PREDICTIVOS (MACHINE LEARNING & DEEP LEARNING)\n")
 cat("==================================================================\n")
 
-# --- MODELO A: RANDOM FOREST (TUA FUNÇÃO NATIVA L2) ---
+# --- MODELO A: RANDOM FOREST  ---
 cat("\n>>> Executando: Random Forest (Normalização L2) ...\n")
 rf_l2_log <- capture.output({
   rf_l2_vis <- withVisible(ML_raman(df_l2, method = "rf", train_prop = 0.7))
@@ -1081,7 +1078,7 @@ if (!is.null(rf_l2_vis$value)) {
 }
 
 
-# --- MODELO B: SVM RADIAL (TUA FUNÇÃO NATIVA L2) ---
+# --- MODELO B: SVM RADIAL  ---
 cat("\n>>> Executando: Support Vector Machine (Normalização L2) ...\n")
 svm_l2_log <- capture.output({
   svm_l2_vis <- withVisible(ML_raman(df_l2, method = "svm", train_prop = 0.7))
@@ -1100,7 +1097,7 @@ if (!is.null(svm_l2_vis$value)) {
 }
 
 
-# --- MODELO C: RANDOM FOREST (TUA FUNÇÃO NATIVA MIN-MAX) ---
+# --- MODELO C: RANDOM FOREST ---
 cat("\n>>> Executando: Random Forest (Normalização Min-Max) ...\n")
 rf_mm_log <- capture.output({
   rf_mm_vis <- withVisible(ML_raman(df_minmax, method = "rf", train_prop = 0.7))
@@ -1114,7 +1111,7 @@ if (!is.null(rf_mm_vis$value)) {
 }
 
 
-# --- MODELO D: SVM RADIAL (TUA FUNÇÃO NATIVA MIN-MAX) ---
+# --- MODELO D: SVM RADIAL  ---
 cat("\n>>> Executando: Support Vector Machine (Normalização Min-Max) ...\n")
 svm_mm_log <- capture.output({
   svm_mm_vis <- withVisible(ML_raman(df_minmax, method = "svm", train_prop = 0.7))
@@ -1128,14 +1125,13 @@ if (!is.null(svm_mm_vis$value)) {
 }
 
 
-# --- MODELO E: DEEP LEARNING (TUA CNN 1D INTERNA COM KERAS) ---
+# --- MODELO E: DEEP LEARNING (CNN 1D INTERNA COM KERAS) ---
 cat("\n>>> Executando: Rede Neuronal Convolucional 1D (CNN 1D) ...\n")
-# MUDANÇA CRÍTICA: Passagem de 15 para 50 épocas para garantir que a curva vermelha do gráfico
-# de treino suba, convirja e estabilize bem acima dos valores basais de validação.
+
 resultado_cnn <- ML_raman_cnn1d(
   dataset = df_l2, 
   train_prop = 0.7, 
-  epochs = 50,       # <- Correção aplicada para resolver o Underfitting analisado no gráfico
+  epochs = 50,       
   batch_size = 16
 )
 
@@ -1145,12 +1141,12 @@ cat("Accuracy final obtida nos dados de teste:", round(resultado_cnn$metrics * 1
 cat("Matriz de Confusão Detalhada (Conjunto de Validação Independente):\n")
 print(resultado_cnn$confusion_matrix)
 
-# Plota as curvas corrigidas de loss/accuracy que agora vão cruzar com estabilidade
+# Plota as curvas corrigidas de loss/accuracy 
 plot(resultado_cnn$history)
 
 
 # --- TESTAR VISUALIZAÇÃO ---
-# Compara o teu df_chondro original com o df_l2 totalmente tratado
+# Compara o df_chondro original com o df totalmente tratado
 visualizar_raw_vs_pre(df_raw = df_chondro, df_processado = df_l2, metodo_norm = "L2")
 
 
