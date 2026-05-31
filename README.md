@@ -37,5 +37,5 @@ Inteligência Artificial e Classificação
 
 ### Especificações do Ambiente
 
-* Dependências: O pipeline necessita apenas do pacote specmine instalado no ambiente R.
+* Dependências: O pipeline necessita do pacote specmine instalado no ambiente R.
 * Robustez de Validação: Divisão de dados baseada em identificação de grupos e pesos de penalização por frequência de classes.
