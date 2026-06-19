@@ -969,7 +969,7 @@ df_chondro <- list(
   y_train = as.factor(chondro$clusters[indices_validos]) 
 )
 
-# [NOTA]: Se fores usar os teus ficheiros .npy locais, descomenta as linhas abaixo:
+# NOTA: Se usar os ficheiros .npy locais, descomenta as linhas abaixo:
 # df_bruto <- dataset_npy(x_file="X_2019clinical.npy", y_file="y_2019clinical.npy", w_file="wavenumbers.npy")
 # indices_validos <- which(!is.na(df_bruto$y_train))
 # df_chondro <- list(data=df_bruto$data[indices_validos, , drop=FALSE], wavenumbers=df_bruto$wavenumbers, y_train=as.factor(df_bruto$y_train[indices_validos]))
@@ -1050,7 +1050,7 @@ df_features_extraidas <- create_features_dataset(
   properties_list = lista_propriedades_mock, 
   vector = picos_alvo
 )
-cat("Matriz estatística de features criada com sucesso! Dimensões:", dim(df_features_extraidas), "\n\n")
+cat("Matriz estatística de features criada com sucesso Dimensões:", dim(df_features_extraidas), "\n\n")
 
 
 # ------------------------------------------------------------------------------
